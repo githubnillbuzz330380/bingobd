@@ -1,1 +1,1 @@
-# bingobd
+www.bingogroupbd.com
