@@ -1,0 +1,74 @@
+from openpyxl import Workbook
+from openpyxl.styles import Font
+from openpyxl.utils import get_column_letter
+
+# Create a new Excel workbook and select the active sheet
+wb = Workbook()
+ws = wb.active
+ws.title = "Daily Accounts"
+
+# Define all report sections and their headers
+sections = {
+    "Daily Sales": [
+        "Date", "Invoice No", "Customer Name", "Total Sales", "Discount", "Net Sales", "Payment Mode (Cash/Bank)", "Remarks"
+    ],
+    "Petty Cash Flow": [
+        "Date", "Purpose", "Amount", "Paid By", "Remarks"
+    ],
+    "Bank Fund Flow": [
+        "Date", "Bank Name", "Deposit", "Withdraw", "Balance", "Remarks"
+    ],
+    "Owner Withdraw/Investment": [
+        "Date", "Type (Withdraw/Invest)", "Amount", "Method", "Remarks"
+    ],
+    "Overtime Report": [
+        "Date", "Staff Name", "Hours", "Rate", "Total", "Remarks"
+    ],
+    "Attendance Penalty": [
+        "Date", "Staff Name", "Penalty Reason", "Amount", "Remarks"
+    ],
+    "Staff Food Allowance": [
+        "Date", "Staff Name", "Meals", "Rate", "Total", "Remarks"
+    ],
+    "PF Deduction Report": [
+        "Date", "Staff Name", "Basic Salary", "PF Rate", "PF Amount"
+    ],
+    "Accessories Broken Penalty": [
+        "Date", "Staff Name", "Item", "Penalty Amount", "Remarks"
+    ],
+    "Cash and Bank Flow Summary": [
+        "Date", "Cash In", "Cash Out", "Bank In", "Bank Out", "Total Cash", "Total Bank", "Remarks"
+    ]
+}
+
+# Start writing data from row 1
+current_row = 1
+
+for section_title, headers in sections.items():
+    # Merge the section title across the header columns
+    ws.merge_cells(
+        start_row=current_row, start_column=1,
+        end_row=current_row, end_column=len(headers)
+    )
+    title_cell = ws.cell(row=current_row, column=1)
+    title_cell.value = section_title
+    title_cell.font = Font(bold=True, size=12)
+    current_row += 1
+
+    # Write headers
+    for col_num, header in enumerate(headers, start=1):
+        cell = ws.cell(row=current_row, column=col_num)
+        cell.value = header
+        cell.font = Font(bold=True)
+    current_row += 2  # Add a blank row before the next section
+
+# Adjust column widths based on header length
+for col in range(1, ws.max_column + 1):
+    column_letter = get_column_letter(col)
+    ws.column_dimensions[column_letter].width = 18
+
+# Save to a file (change the path as needed for your environment)
+output_filename = "China_Restaurant_Gulshan_Report.xlsx"
+wb.save(output_filename)
+
+print(f"Excel file '{output_filename}' has been created successfully.")

@@ -1,1 +1,0 @@
-www.bingogroupbd.com
